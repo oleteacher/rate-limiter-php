@@ -9,7 +9,7 @@ A pure PHP implementation of a rate limiter.
 ## Installation
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/php-rate-limiter.git
+git clone https://github.com/niteshapte/rate-limiter-php.git
 ```
 ## Usage
 ### Configuration
