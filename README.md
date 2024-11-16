@@ -1,5 +1,5 @@
 # Rate Limiter in PHP
-A simple, pure PHP implementation of a rate limiter.
+A pure PHP implementation of a rate limiter.
 
 ## Features
 - Limit the number of requests within a specific time period.
