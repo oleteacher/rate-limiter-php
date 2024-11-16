@@ -7,8 +7,44 @@ A simple, pure PHP implementation of a rate limiter.
 - Customizable parameters.
 
 ## Installation
-
 Clone the repository:
 ```bash
 git clone https://github.com/your-username/php-rate-limiter.git
+```
+## Usage
+### Configuration
+The rate limiter can be configured in ```rate_limiter_config.php```
+```
+$rateLimiter = new RateLimiter(
+    limitForPeriod: 2,         // Max 2 requests
+    limitRefreshPeriod: 1.0,   // Reset limit every 1 second
+    timeoutDuration: 0.1       // Timeout after 500 milliseconds
+);
+```
+
+## Example
+Check the ```example.php``` file:
+```
+<?php
+require_once 'rate_limiter_config.php';
+
+/** @var RateLimiter $rateLimiter */
+$rateLimiter = require 'rate_limiter_config.php';
+
+// Simulate requests
+for ($i = 0; $i < 10; $i++) {
+    if ($rateLimiter->allowRequest()) {
+        echo "Request $i: Allowed\n";
+    } else {
+        echo "Request $i: Rate limit exceeded\n";
+        if ($rateLimiter->waitForRequest()) {
+            echo "Request $i: Allowed after waiting\n";
+        } else {
+            echo "Request $i: Denied after timeout\n";
+        }
+    }
+
+    usleep(200000); // Simulate delay between requests (200ms)
+}
+?>
 ```
