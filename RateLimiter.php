@@ -1,4 +1,5 @@
 <?php
+
 class RateLimiter {
     private int $limitForPeriod;
     private float $limitRefreshPeriod; // in seconds
@@ -6,23 +7,40 @@ class RateLimiter {
     private array $requests = [];     // Stores timestamps of requests
     private $lock;                    // Lock for thread safety
 
+    /**
+     * Constructor for RateLimiter.
+     * 
+     * @param int $limitForPeriod Maximum number of requests allowed in the period.
+     * @param float $limitRefreshPeriod Time period in seconds to refresh the limit.
+     * @param float $timeoutDuration Maximum time in seconds to wait for a request to be allowed.
+     */
     public function __construct(int $limitForPeriod, float $limitRefreshPeriod, float $timeoutDuration) {
         $this->limitForPeriod = $limitForPeriod;
         $this->limitRefreshPeriod = $limitRefreshPeriod;
         $this->timeoutDuration = $timeoutDuration;
         $this->lock = fopen(__DIR__ . '/rate_limiter.lock', 'c');
+
+        if ($this->lock === false) {
+            throw new RuntimeException('Unable to create lock file');
+        }
     }
 
     public function __destruct() {
-        fclose($this->lock);
+        if (is_resource($this->lock)) {
+            fclose($this->lock);
+        }
     }
 
     private function lock() {
-        flock($this->lock, LOCK_EX);
+        if (!flock($this->lock, LOCK_EX)) {
+            throw new RuntimeException('Unable to acquire lock');
+        }
     }
 
     private function unlock() {
-        flock($this->lock, LOCK_UN);
+        if (!flock($this->lock, LOCK_UN)) {
+            throw new RuntimeException('Unable to release lock');
+        }
     }
 
     /**
