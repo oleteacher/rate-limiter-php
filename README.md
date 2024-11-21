@@ -48,3 +48,17 @@ for ($i = 0; $i < 10; $i++) {
 }
 ?>
 ```
+While I can't provide an exact number of users that can be active without causing server slow down, here are some factors to consider:
+
+1. **Concurrency Handling:** The locking mechanism ensures thread safety, but excessive locking can lead to contention and slow down if too many requests are processed simultaneously.
+2. **Request Processing:** The `allowRequest` method's performance depends on the number of stored timestamps and the efficiency of the `array_filter` function. With a high number of requests, this operation could become a bottleneck.
+3. **Server Resources:** The actual number of users your server can handle depends on your server's CPU, memory, and I/O capabilities.
+
+For a rough estimate:
+- **150 Active Users:** Should be manageable with the current implementation, assuming moderate server resources.
+- **500 Total Users:** If only a portion (e.g., 150) are active at any given time, the performance should remain acceptable.
+
+### Recommendations:
+- **Load Testing:** Perform load testing to determine the actual capacity and identify any bottlenecks.
+- **Optimization:** Consider using a more scalable solution like Redis for storing timestamps if higher concurrency is expected.
+- **Monitoring:** Continuously monitor server performance and adjust rate limiter parameters as needed.
